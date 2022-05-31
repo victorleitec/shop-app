@@ -36,9 +36,6 @@ class ProductsPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: ListView.builder(
-            physics: const AlwaysScrollableScrollPhysics(),
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
             itemCount: products.itemsCount,
             itemBuilder: (ctx, i) => Column(
               children: [

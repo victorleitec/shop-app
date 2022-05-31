@@ -35,7 +35,6 @@ class _CounterPageState extends State<CounterPage> {
               setState(() {
                 CounterProvider.of(context)?.state.dec();
               });
-              print(CounterProvider.of(context)?.state.value);
             },
             icon: const Icon(Icons.remove),
           )
