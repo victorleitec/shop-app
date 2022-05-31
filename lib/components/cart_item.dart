@@ -4,12 +4,12 @@ import 'package:shop/models/cart.dart';
 import 'package:shop/models/cart_item.dart';
 
 class CartItemWidget extends StatelessWidget {
-  final CartItem cartItem;
-
   const CartItemWidget(
     this.cartItem, {
     Key? key,
   }) : super(key: key);
+
+  final CartItem cartItem;
 
   @override
   Widget build(BuildContext context) {

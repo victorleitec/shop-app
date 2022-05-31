@@ -1,11 +1,11 @@
 class HttpException implements Exception {
-  final String message;
-  final int statusCode;
-
   HttpException({
     required this.message,
     required this.statusCode,
   });
+  
+  final String message;
+  final int statusCode;
 
   @override
   String toString() {

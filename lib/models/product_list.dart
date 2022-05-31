@@ -8,6 +8,8 @@ import 'package:shop/models/product.dart';
 import 'package:shop/utils/constants.dart';
 
 class ProductList with ChangeNotifier {
+  ProductList([this._token = "", this._userId = "", this._items = const []]);
+
   final String _token;
   final String _userId;
   final List<Product> _items;
@@ -16,8 +18,6 @@ class ProductList with ChangeNotifier {
 
   List<Product> get favoriteItems =>
       _items.where((product) => product.isFavorite).toList();
-
-  ProductList([this._token = "", this._userId = "", this._items = const []]);
 
   int get itemsCount {
     return items.length;

@@ -6,13 +6,6 @@ import 'package:shop/exceptions/http_exception.dart';
 import 'package:shop/utils/constants.dart';
 
 class Product with ChangeNotifier {
-  final String id;
-  final String name;
-  final String description;
-  final double price;
-  final String imageUrl;
-  bool isFavorite;
-
   Product({
     required this.id,
     required this.name,
@@ -21,6 +14,13 @@ class Product with ChangeNotifier {
     required this.imageUrl,
     this.isFavorite = false,
   });
+
+  final String id;
+  final String name;
+  final String description;
+  final double price;
+  final String imageUrl;
+  bool isFavorite;
 
   void _toggleFavorite() {
     isFavorite = !isFavorite;

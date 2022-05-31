@@ -12,7 +12,8 @@ class AuthForm extends StatefulWidget {
   State<AuthForm> createState() => _AuthFormState();
 }
 
-class _AuthFormState extends State<AuthForm> {
+class _AuthFormState extends State<AuthForm>
+    with SingleTickerProviderStateMixin {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
@@ -22,13 +23,58 @@ class _AuthFormState extends State<AuthForm> {
     "password": "",
   };
 
-  bool _isLogin() => _authMode == AuthMode.login;
+  AnimationController? _controller;
+  Animation<double>? _opacityAnimation;
+  Animation<Offset>? _slideAnimation;
 
-  bool _isSignUp() => _authMode == AuthMode.singUp;
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+
+    _opacityAnimation = Tween(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller!,
+        curve: Curves.linear,
+      ),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, -1.5),
+      end: const Offset(0, 0),
+    ).animate(
+      CurvedAnimation(
+        parent: _controller!,
+        curve: Curves.linear,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller?.dispose();
+  }
+
+  bool _isLogin() => _authMode == AuthMode.login;
 
   void _switchAuthMode() {
     setState(() {
-      _authMode = _isLogin() ? AuthMode.singUp : AuthMode.login;
+      if (_isLogin()) {
+        _authMode = AuthMode.singUp;
+        _formKey.currentState?.reset();
+        _controller?.forward();
+      } else {
+        _authMode = AuthMode.login;
+        _formKey.currentState?.reset();
+        _controller?.reverse();
+      }
     });
   }
 
@@ -82,7 +128,9 @@ class _AuthFormState extends State<AuthForm> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeIn,
         padding: const EdgeInsets.all(16),
         height: _isLogin() ? 330 : 400,
         width: deviceSize.width * 0.75,
@@ -118,22 +166,35 @@ class _AuthFormState extends State<AuthForm> {
                 },
               ),
               // Confirm password if authMode is signUp
-              if (_isSignUp())
-                TextFormField(
-                  decoration:
-                      const InputDecoration(labelText: "Confirm Password"),
-                  keyboardType: TextInputType.text,
-                  obscureText: true,
-                  validator: _isLogin()
-                      ? null
-                      : (_password) {
-                          final password = _password ?? "";
-                          if (password != _passwordController.text) {
-                            return "Passwords do not match";
-                          }
-                          return null;
-                        },
+              AnimatedContainer(
+                constraints: BoxConstraints(
+                  minHeight: _isLogin() ? 0 : 60,
+                  maxHeight: _isLogin() ? 0 : 120,
                 ),
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.linear,
+                child: FadeTransition(
+                  opacity: _opacityAnimation!,
+                  child: SlideTransition(
+                    position: _slideAnimation!,
+                    child: TextFormField(
+                      decoration:
+                          const InputDecoration(labelText: "Confirm Password"),
+                      keyboardType: TextInputType.text,
+                      obscureText: true,
+                      validator: _isLogin()
+                          ? null
+                          : (_password) {
+                              final password = _password ?? "";
+                              if (password != _passwordController.text) {
+                                return "Passwords do not match";
+                              }
+                              return null;
+                            },
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: 20),
               if (_isLoading)
                 const CircularProgressIndicator()

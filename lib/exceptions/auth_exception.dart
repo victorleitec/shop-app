@@ -1,4 +1,5 @@
 class AuthException implements Exception {
+  AuthException(this.key);
   static const Map<String, String> errors = {
     "EMAIL_EXISTS": "This email address is already in use.",
     "OPERATION_NOT_ALLOWED": "Operation not allowed.",
@@ -6,8 +7,7 @@ class AuthException implements Exception {
         "We have blocked all requests from this device due to unusual activity. Try again later.",
     "EMAIL_NOT_FOUND":
         "There is no user record corresponding to this identifier.",
-    "INVALID_PASSWORD":
-        "The password is invalid.",
+    "INVALID_PASSWORD": "The password is invalid.",
     "USER_DISABLED": "The user account has been disabled.",
     "USER_NOT_FOUND":
         "There is no user record corresponding to this identifier.",
@@ -16,8 +16,6 @@ class AuthException implements Exception {
   };
 
   final String key;
-
-  AuthException(this.key);
 
   @override
   String toString() {

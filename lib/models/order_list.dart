@@ -9,11 +9,11 @@ import 'package:shop/models/order.dart';
 import '../utils/constants.dart';
 
 class OrderList with ChangeNotifier {
+  OrderList([this._token = "", this._userId = "", this._items = const []]);
+
   final String _token;
   final String _userId;
   List<Order> _items;
-
-  OrderList([this._token = "", this._userId = "", this._items = const []]);
 
   List<Order> get items {
     return [..._items];
@@ -29,8 +29,8 @@ class OrderList with ChangeNotifier {
 
   Future<void> loadOrders() async {
     clearItems();
-    final response =
-        await get(Uri.parse("${Constants.orderBaseUrl}/$_userId.json?auth=$_token"));
+    final response = await get(
+        Uri.parse("${Constants.orderBaseUrl}/$_userId.json?auth=$_token"));
 
     if (response.body == "null") return;
 
